@@ -87,4 +87,34 @@
   margin: 0.3rem 0;
   padding: 0.5rem;
   border-radius: 4px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.btn-remove {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  margin-left: 5px;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-remove:hover {
+  background: #a71d2a;
+}
+
+.admin-bg {
+  background-color: #ffeeba; 
+}
+
+.user-bg {
+  background-color: #f8f9fa;// #d4c7de; 
+}
+
+.guest-bg {
+  background-color: #e9ecef;// #d1afcd; 
 }

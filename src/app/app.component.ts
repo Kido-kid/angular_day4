@@ -1,15 +1,19 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
+import { CommonModule, NgClass, NgStyle } from '@angular/common';
+import { HoverHighlightDirective } from './hover-highlight.directive';
+import { IfAdminDirective } from './app-if-admin.directive';
 
 
 interface User{
+  id: number;
   name:string;
-  Role: "Teacher" | "Parent" | "Student";
+  Role: "Admin" | "User" | "Guest" ;
 }
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,FormsModule],
+  imports: [RouterOutlet, FormsModule, CommonModule, NgClass, NgStyle,  HoverHighlightDirective,IfAdminDirective],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -17,11 +21,14 @@ interface User{
 
 export class AppComponent {
   title = 'UserManagementSystem';
-  roles: Array<"Teacher" | "Parent" | "Student"> = ['Teacher', 'Parent', 'Student'];
-  selectedRole: "Teacher" | "Parent" | "Student" = this.roles[0];
+  roles: Array<"Admin" | "User" | "Guest" > = ['Admin', 'User', 'Guest' ];
+  selectedRole: "Admin" | "User" | "Guest"  = this.roles[0];
   message: string = '';
+  private nextId = 1;
+  adminOnly= {color:'green',marginLeft:'10px'};
 
   user:User={
+    id:0,
     name:'',
     Role: this.selectedRole
   }
@@ -35,7 +42,11 @@ export class AppComponent {
   addUser(){
     if(this.user.name.trim()){
       try{
-      this.users.push({...this.user});
+      this.users.push({
+        id: this.nextId++,
+        name: this.user.name.toUpperCase(),
+        Role: this.user.Role
+      });
       this.message=`User Name : "${this.user.name}" & Role : "${this.user.Role}" - added successfully`;
             setTimeout(() => {
         this.message = '';
@@ -57,9 +68,22 @@ export class AppComponent {
 
   }
 
-  getUsersByRole(role: "Teacher" | "Parent" | "Student") {
+  getUsersByRole(role: "Admin" | "User" | "Guest" ) {
   return this.users.filter(u => u.Role === role);
-}
+  }
+
+  removeUser(id: number) {
+    try{
+    const removedUser = this.users.find(u=> u.id === id);
+    this.users = this.users.filter(u => u.id !== id);
+    
+    this.message = `User Removed : Name : ${removedUser?.name} with Role : ${ removedUser?.Role}`;
+    setTimeout(() => {
+        this.message = '';
+    }, 5000);
+    }catch(e){console.log(e);}
+  }
+
 
 
 }

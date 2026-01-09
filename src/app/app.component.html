@@ -35,12 +35,37 @@
 
   @for (role of roles; track role) {
     <div class="role-section">
-      <h3 class="role-heading">{{ role }}s</h3>
+      <h3 [ngStyle]="{
+              'color': role === 'Admin' ? 'red' : 
+                       role === 'User' ? 'blue' : 
+                         'gray'
+            }" class="role-heading"
+            appHoverHighlight="pink">{{ role }}s</h3>
 
       @if (getUsersByRole(role).length > 0) {
         <ul class="role-users">
-          @for (u of getUsersByRole(role); track u) {
-            <li class="user-item">{{ u.name }}</li>
+          @for (u of getUsersByRole(role); track u.id) {
+            <li class="user-item"
+            [ngClass]="{
+              'admin-bg': u.Role === 'Admin',
+              'user-bg' : u.Role === 'User',
+              'guest-bg': u.Role === 'Guest'
+            }"
+            [ngStyle]="{
+              'color': u.Role === 'Admin' ? 'red' : 
+                       u.Role === 'User' ? 'blue' : 
+                         'gray'
+            }"    
+             appHoverHighlight="lightyellow"
+            >
+              {{ u.name }}
+              <button class="btn-remove" (click)="removeUser(u.id)">Remove</button>
+                <div *appIfAdmin="u.Role">
+                    <p  strong [style]="adminOnly" >Admin-only controls here</p>
+              </div>
+
+
+            </li>
           }
         </ul>
       } @else {
